@@ -30,9 +30,6 @@ RUN chmod o+rX /opt/privatebin && \
     ln -s /etc/httpd/conf/magic /opt/privatebin/conf/magic && \
     git clone https://github.com/PrivateBin/PrivateBin.git /opt/privatebin/www/
 
-# Copy config files
-
-
 # Volume for run - non persistent
 VOLUME ["/opt/privatebin/run"]
 
@@ -45,6 +42,7 @@ WORKDIR /opt/privatebin/
 # We listen on 8080
 EXPOSE 8080
 
+# Copy config & startup files
 COPY ./httpd.sh /opt/privatebin/httpd.sh
 COPY ./httpd.conf /opt/privatebin/httpd.conf
 COPY ./conf.ini /opt/privatebin/www/cfg/conf.ini
