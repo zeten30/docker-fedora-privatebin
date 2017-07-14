@@ -33,7 +33,10 @@ RUN chmod o+rX /opt/privatebin && \
 # Copy config files
 
 
-# Announce volume
+# Volume for run - non persistent
+VOLUME ["/opt/privatebin/run"]
+
+# Volume for data - PrivateBin persistent storage
 VOLUME ["/opt/privatebin/data"]
 
 # Switch to homedir as working dir
