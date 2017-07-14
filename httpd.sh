@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-httpd -D FOREGROUND -f /opt/privatebin/httpd.conf -d /opt/privatebin/
+httpd -D FOREGROUND -f ./httpd.conf -d .

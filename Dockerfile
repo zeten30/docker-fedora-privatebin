@@ -11,9 +11,7 @@ RUN dnf --setopt=tsflags=nodocs -y install \
     php-mcrypt \
     php-xml \
     httpd \
-    httpd-tools \
-    wget \
-    unzip 2> /dev/null && \
+    httpd-tools 2> /dev/null && \
     dnf clean all && \
     rm /etc/httpd/conf.d/welcome.conf && \
     adduser --uid 10000 --comment 'PrivateBin Apache User' --home-dir /opt/privatebin privatebin
@@ -24,7 +22,8 @@ USER privatebin
 # Create directories
 # link *conf*.d, modules & magic file
 # git clone privatebin app
-RUN mkdir /opt/privatebin/logs /opt/privatebin/run /opt/privatebin/www /opt/privatebin/conf && \
+RUN chmod o+rX /opt/privatebin && \
+    mkdir /opt/privatebin/logs /opt/privatebin/run /opt/privatebin/www /opt/privatebin/conf && \
     ln -s /etc/httpd/conf.d /opt/privatebin/conf.d && \
     ln -s /etc/httpd/conf.modules.d /opt/privatebin/conf.modules.d && \
     ln -s /usr/lib64/httpd/modules /opt/privatebin/modules && \
@@ -32,8 +31,7 @@ RUN mkdir /opt/privatebin/logs /opt/privatebin/run /opt/privatebin/www /opt/priv
     git clone https://github.com/PrivateBin/PrivateBin.git /opt/privatebin/www/
 
 # Copy config files
-COPY httpd.conf /opt/privatebin/
-COPY conf.ini /opt/privatebin/www/cfg/
+
 
 # Announce volume
 VOLUME ["/opt/privatebin/data"]
@@ -41,11 +39,12 @@ VOLUME ["/opt/privatebin/data"]
 # Switch to homedir as working dir
 WORKDIR /opt/privatebin/
 
-# Copy startup script
-COPY ./httpd.sh /httpd.sh
-
 # We listen on 8080
 EXPOSE 8080
 
+COPY ./httpd.sh /opt/privatebin/httpd.sh
+COPY ./httpd.conf /opt/privatebin/httpd.conf
+COPY ./conf.ini /opt/privatebin/www/cfg/conf.ini
+
 # GO! :)
-CMD ["/httpd.sh"]
+CMD ["/opt/privatebin/httpd.sh"]
